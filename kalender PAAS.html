@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<title>Digimari PAASkalender</title>
+<style>
+  body {
+    font-family: 'Trebuchet MS', sans-serif;
+    background: url('paasei.jpg') no-repeat center center fixed;
+    background-size: cover;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+    overflow: hidden;
+  }
+  h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, #ffd700, #ccff66);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px #333;
+  }
+  .subtitle {
+    color: #006600;
+    margin-bottom: 30px;
+    font-weight: bold;
+    text-shadow: 1px 1px #fff;
+  }
+  .kalender {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    max-width: 1000px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+  .vakje {
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+    text-shadow: 1px 1px #000;
+    text-align: center;
+  }
+  .vakje:hover { transform: scale(1.05); }
+
+  /* Kleuren */
+  .rood { background:#b30000; color:#fff; }
+  .neutraal { background:#999999; }
+  .wit { background:#ffffff; color:#000; text-shadow:none; }
+  .paars { background:#4b0082; color:#fff; }
+  .goud { background:#ffd700; color:#000; text-shadow:none; }
+  .roze { background:#ff69b4; }
+  .paarsrood { background: linear-gradient(135deg, #4b0082, #b30000); color:#fff; }
+  .zwartpaars { background: linear-gradient(135deg, #000000, #4b0082); color:#fff; }
+  .witgoud { background: linear-gradient(135deg, #ffffff, #ffd700); color:#000; }
+  .algemeen { background: linear-gradient(135deg, #ff1000, #1000ff, #dfd750); color:#000; }
+
+  /* Magic effect */
+  .magic { animation: gloed 1s ease-out; }
+  @keyframes gloed {
+    0%   { box-shadow: 0 0 15px gold; transform: scale(1.2); }
+    100% { box-shadow: none; transform: scale(1); }
+  }
+
+  /* Paaseieren */
+  .paasei {
+    position: fixed;
+    top: -20px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    opacity: 0.9;
+    animation: vallen linear infinite;
+    z-index: 1;
+  }
+  @keyframes vallen { to { transform: translateY(110vh); } }
+
+  /* Logo rechts van boven naar beneden */
+  .logo {
+    position: fixed;
+    right: 10px;
+    top: -100px;
+    width: 80px;
+    animation: logoVal 8s linear infinite;
+    z-index: 3;
+  }
+  @keyframes logoVal { 0% { top:-100px; } 100% { top:100vh; } }
+
+  /* Paashaas onderaan van links naar rechts */
+  .paashaas {
+    position: fixed;
+    bottom: 10px;
+    left: -150px;
+    width: 120px;
+    animation: haasLoop 12s linear infinite;
+    z-index: 3;
+  }
+  @keyframes haasLoop { 0% { left:-150px; } 100% { left:110vw; } }
+
+  /* Hart video onderaan */
+  .hart {
+    position: fixed;
+    bottom: 0;
+    left: 60%;
+    transform: translateX(-50%);
+    width: 180px;
+    z-index: 3;
+  }
+</style>
+<script>
+// datumregels per dag
+const dagData = {
+  17:"always", 9:"2026-02-18", 18:"2026-02-22", 19:"2026-03-01", 20:"2026-03-08",
+  21:"2026-03-15", 22:"2026-03-22", 1:"2026-03-29", 2:"2026-03-30", 3:"2026-03-31",
+  4:"2026-04-01", 5:"2026-04-02", 6:"2026-04-03", 7:"2026-04-04", 8:"2026-04-05",
+  10:"2026-04-06", 15:"2026-05-14", 16:"2026-05-24"
+};
+function openVakje(nr){
+  const datum=dagData[nr];
+  const today=new Date(); const todayStr=new Date(today.getFullYear(),today.getMonth(),today.getDate()).toISOString().split("T")[0];
+  if(datum==="always"||todayStr>=datum){
+    document.getElementById("kerstklok").play();
+    const vakje=event.currentTarget;
+    vakje.classList.add("magic");
+    setTimeout(()=>vakje.classList.remove("magic"),1000);
+    const link=document.getElementById("link"+nr); if(link&&link.href) window.location.href=link.href;
+  } else { alert("Dit vakje kan pas geopend worden op "+datum); }
+}
+function maakPaasAnimatie(){
+  const kleuren=["#ff69b4","#ff1493","#ffd700","#00ccff","#66ff66","#ff6600"];
+  for(let i=0;i<40;i++){
+    let ei=document.createElement("div");
+    ei.className="paasei";
+    let schaal=0.5+Math.random()*1.5;
+    ei.style.width=(20*schaal)+"px";
+    ei.style.height=(28*schaal)+"px";
+    ei.style.left=Math.random()*100+"vw";
+    ei.style.animationDuration=(5+Math.random()*10)+"s";
+    ei.style.opacity=(0.7+Math.random()*0.3).toFixed(2);
+    const kleur=kleuren[Math.floor(Math.random()*kleuren.length)];
+    ei.style.background="radial-gradient(circle at 50% 30%,"+kleur+","+kleur+")";
+    document.body.appendChild(ei);
+  }
+}
+window.onload=maakPaasAnimatie;
+</script>
+</head>
+<body>
+<h1>✝ Digim@ri Paaskalender ✝</h1>
+<div class="subtitle">Van Aswoensdag t/m Pinksteren</div>
+<audio id="kerstklok" src="kerstklok.mp3" preload="auto"></audio>
+
+<div class="kalender">
+  <div class="vakje algemeen" onclick="openVakje(17)">Algemene Dag<br>(altijd open)<a id="link17" href="https://payhip.com/digimari" style="display:none;"></a></div>
+  <div class="vakje paars" onclick="openVakje(9)">Aswoensdag<br>18 feb<a id="link9" href="https://payhip.com/b/aswoensdag" style="display:none;"></a></div>
+  <div class="vakje paars" onclick="openVakje(18)">1e zondag<br>22 feb<a id="link18" href="https://payhip.com/b/zondag1" style="display:none;"></a></div>
+  <div class="vakje paars" onclick="openVakje(19)">2e zondag<br>1 mrt<a id="link19" href="https://payhip.com/b/zondag2" style="display:none;"></a></div>
+  <div class="vakje paars" onclick="openVakje(20)">3e zondag<br>8 mrt<a id="link20" href="https://payhip.com/b/zondag3" style="display:none;"></a></div>
+  <div class="vakje roze" onclick="openVakje(21)">4e zondag (Laetare)<br>15 mrt<a id="link21" href="https://payhip.com/b/zondag4" style="display:none;"></a></div>
+  <div class="vakje paars" onclick="openVakje(22)">5e zondag<br>22 mrt<a id="link22" href="https://payhip.com/b/zondag5" style="display:none;"></a>
+  </div>
+  <div class="vakje paarsrood" onclick="openVakje(1)">Palmzondag<br>29 mrt<a id="link1" href="https://payhip.com/b/palm" style="display:none;"></a>
+  </div>
+
+  <!-- Weekdagen in de Goede Week -->
+  <div class="vakje neutraal" onclick="openVakje(2)">Maandag<br>30 mrt<a id="link2" href="https://payhip.com/b/maandag" style="display:none;"></a>
+  </div>
+  <div class="vakje neutraal" onclick="openVakje(3)">Dinsdag<br>31 mrt<a id="link3" href="https://payhip.com/b/dinsdag" style="display:none;"></a>
+  </div>
+  <div class="vakje neutraal" onclick="openVakje(4)">Woensdag<br>1 apr<a id="link4" href="https://payhip.com/b/woensdag" style="display:none;"></a>
+  </div>
+
+  <!-- Triduum en Pasen -->
+  <div class="vakje wit" onclick="openVakje(5)">Witte Donderdag<br>2 apr<a id="link5" href="https://payhip.com/b/wittedonderdag" style="display:none;"></a>
+  </div>
+  <div class="vakje zwartpaars" onclick="openVakje(6)">Goede Vrijdag<br>3 apr<a id="link6" href="https://payhip.com/b/goedevrijdag" style="display:none;"></a>
+  </div>
+  <div class="vakje paars" onclick="openVakje(7)">Stille Zaterdag<br>4 apr<a id="link7" href="https://payhip.com/b/stillezaterdag" style="display:none;"></a>
+  </div>
+  <div class="vakje witgoud" onclick="openVakje(8)">Paaszondag<br>5 apr<a id="link8" href="https://payhip.com/b/paaszondag" style="display:none;"></a>
+  </div>
+  <div class="vakje paars" onclick="openVakje(10)">2e Paasdag<br>6 apr<a id="link10" href="https://payhip.com/b/2epaaspdag" style="display:none;"></a>
+  </div>
+
+  <!-- Slotfeesten -->
+  <div class="vakje wit" onclick="openVakje(15)">Hemelvaart<br>14 mei<a id="link15" href="https://payhip.com/b/hemelvaart" style="display:none;"></a>
+  </div>
+  <div class="vakje rood" onclick="openVakje(16)">Pinksteren<br>24 mei<a id="link16" href="https://payhip.com/b/pinksteren" style="display:none;"></a>
+  </div>
+</div>
+
+<!-- Extra simulaties -->
+<img src="logo.png" class="logo" alt="Logo">
+<img src="paashaas.png" class="paashaas" alt="Paashaas">
+<video class="hart" src="hart.mp4" autoplay loop muted></video>
+
+</body>
+</html>
